@@ -1,2 +1,1 @@
 npx lint-staged
-.git/hooks/commit-msg $1
