@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt'
 import { PostgresCreateUserRepository } from '../repositories/postgres/createUser.js'
 import { PostGresGetUserByEmailRepository } from '../repositories/postgres/get-user-by-email.js'
 
+import { EmailAlreadyInUseError } from '../errors/users.js'
+
 export class CreateUserUseCase {
     async execute(createUserParams) {
         //to do: verificar se o email ja esta em uso
@@ -15,7 +17,7 @@ export class CreateUserUseCase {
             )
 
         if (userWithProvidedEmail) {
-            throw new Error('The provided email is already in use.')
+            throw new EmailAlreadyInUseError(createUserParams.email)
         }
 
         const userId = randomUUID()
