@@ -1,7 +1,9 @@
 import { randomUUID } from 'crypto'
 import bcrypt from 'bcrypt'
-import { PostgresCreateUserRepository } from '../repositories/postgres/createUser.js'
-import { PostGresGetUserByEmailRepository } from '../repositories/postgres/get-user-by-email.js'
+import {
+    PostgresCreateUserRepository,
+    PostGresGetUserByEmailRepository,
+} from '../repositories/postgres/index.js'
 
 import { EmailAlreadyInUseError } from '../errors/users.js'
 
