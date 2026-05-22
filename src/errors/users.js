@@ -4,3 +4,10 @@ export class EmailAlreadyInUseError extends Error {
         this.name = 'EmailAlreadyInUseError'
     }
 }
+
+export class UserDoNotExistError extends Error {
+    constructor() {
+        super(`The id provided do not exists`)
+        this.name = 'UserDoNotExistError'
+    }
+}

@@ -1,12 +1,23 @@
-import { EmailAlreadyInUseError } from '../errors/users.js'
+import { EmailAlreadyInUseError, UserDoNotExistError } from '../errors/users.js'
 import {
     PostGresGetUserByEmailRepository,
+    PostgresGetUserByIdRepository,
     PostgresUpdateUserRepository,
 } from '../repositories/postgres/index.js'
 import bcrypt from 'bcrypt'
 
 export class UpdateUserUseCase {
     async execute(userId, updateUserParams) {
+        const postgresGetUserByIdRepository =
+            new PostgresGetUserByIdRepository()
+
+        const userWithProvidedId =
+            await postgresGetUserByIdRepository.execute(userId)
+        console.log(userWithProvidedId)
+        if (!userWithProvidedId) {
+            throw new UserDoNotExistError()
+        }
+
         if (updateUserParams.email) {
             const postgresGetUserByEmailRepository =
                 new PostGresGetUserByEmailRepository()
