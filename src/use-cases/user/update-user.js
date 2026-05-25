@@ -1,6 +1,6 @@
 import {
     EmailAlreadyInUseError,
-    UserDoNotExistError,
+    UserNotFoundError,
 } from '../../errors/users.js'
 import bcrypt from 'bcrypt'
 
@@ -19,7 +19,7 @@ export class UpdateUserUseCase {
         const userWithProvidedId =
             await this.getUserByIdRepository.execute(userId)
         if (!userWithProvidedId) {
-            throw new UserDoNotExistError()
+            throw new UserNotFoundError()
         }
 
         if (updateUserParams.email) {
