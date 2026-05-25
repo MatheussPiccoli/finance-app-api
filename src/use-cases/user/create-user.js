@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import bcrypt from 'bcrypt'
 
-import { EmailAlreadyInUseError } from '../errors/users.js'
+import { EmailAlreadyInUseError } from '../../errors/users.js'
 
 export class CreateUserUseCase {
     constructor(createUserRepository, getUserByEmailRepository) {
