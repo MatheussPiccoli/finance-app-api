@@ -8,7 +8,7 @@ import {
 
 import validator from 'validator'
 
-export class createTransactionController {
+export class CreateTransactionController {
     constructor(createTransactionUseCase) {
         this.createTransactionUseCase = createTransactionUseCase
     }
