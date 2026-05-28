@@ -1,6 +1,6 @@
 import { UserNotFoundError } from '../../errors/users.js'
 
-export class getTransactionsByUserIdUseCase {
+export class GetTransactionsByUserIdUseCase {
     constructor(getTransactionsByUserIdRepository, getUserByIdRepository) {
         this.getTransactionsByUserIdRepository =
             getTransactionsByUserIdRepository

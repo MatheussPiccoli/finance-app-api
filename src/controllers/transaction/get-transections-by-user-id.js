@@ -8,7 +8,7 @@ import {
     ok,
 } from '../helpers/index.js'
 
-export class getTransactionsByUserIdController {
+export class GetTransactionsByUserIdController {
     constructor(getTransactionsByUserIdUseCase) {
         this.getTransactionsByUserIdUseCase = getTransactionsByUserIdUseCase
     }
