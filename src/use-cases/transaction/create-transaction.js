@@ -1,21 +1,21 @@
-import { UserNotFoundError } from '../../errors/users'
-import { v4 as uuidv4 } from 'uuid'
+import { UserNotFoundError } from '../../errors/users.js'
+import { randomUUID } from 'crypto'
 
 export class CreateTransactionUseCase {
-    constrcutor(createTransactionRepository, getUserByIdRepository) {
+    constructor(createTransactionRepository, getUserByIdRepository) {
         this.createTransactionRepository = createTransactionRepository
         this.getUserByIdRepository = getUserByIdRepository
     }
 
     async execute(createTransactionParams) {
-        const userId = createTransactionParams.userId
+        const userId = createTransactionParams.user_id
         const user = await this.getUserByIdRepository.execute(userId)
 
         if (!user) {
             throw new UserNotFoundError()
         }
 
-        const transactionId = uuidv4()
+        const transactionId = randomUUID()
 
         const transaction = await this.createTransactionRepository.execute({
             ...createTransactionParams,
