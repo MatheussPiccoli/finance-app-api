@@ -1,13 +1,13 @@
 import {
+    badRequest,
     checkIfAmountIsValid,
     checkIfTypeIsValid,
     invalidAmountResponse,
     invalidTypeResponse,
     ok,
-    badRequest,
     checkIfIdIsValid,
     invalidIdResponse,
-} from '../index.js'
+} from '../helpers/index.js'
 
 export class UpdateTransactionController {
     constructor(updateTransactionUseCase) {
