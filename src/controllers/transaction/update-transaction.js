@@ -1,37 +1,59 @@
 import {
     checkIfAmountIsValid,
-    checkIfIdIsValid,
     checkIfTypeIsValid,
     invalidAmountResponse,
-    invalidIdResponse,
     invalidTypeResponse,
-} from '../helpers'
+    ok,
+    badRequest,
+    checkIfIdIsValid,
+    invalidIdResponse,
+} from '../index.js'
 
 export class UpdateTransactionController {
     constructor(updateTransactionUseCase) {
         this.updateTransactionUseCase = updateTransactionUseCase
     }
     async execute(httpRequest) {
-        const params = httpRequest.body
+        const idIsValid = checkIfIdIsValid(httpRequest.params.transactionId)
 
-        const userIdIsValid = checkIfIdIsValid(params.user_id)
-
-        if (!userIdIsValid) {
+        if (!idIsValid) {
             return invalidIdResponse()
         }
+        const params = httpRequest.body
 
-        const amountIsValid = checkIfAmountIsValid(params.amount)
+        const allowedFields = ['name', 'date', 'amount', 'type']
 
-        if (!amountIsValid) {
-            return invalidAmountResponse()
+        const someFieldIsNotAllowed = Object.keys(params).some(
+            (field) => !allowedFields.includes(field),
+        )
+
+        if (someFieldIsNotAllowed) {
+            return badRequest({
+                message: 'Some provided field is not allowed',
+            })
         }
 
-        const type = params.type.trim().toUpperCase()
+        if (params.amount) {
+            const amountIsValid = checkIfAmountIsValid(params.amount)
 
-        const typeIsValid = checkIfTypeIsValid(type)
-
-        if (!typeIsValid) {
-            return invalidTypeResponse()
+            if (!amountIsValid) {
+                return invalidAmountResponse()
+            }
         }
+
+        if (params.type) {
+            const typeIsValid = checkIfTypeIsValid(params.type)
+
+            if (!typeIsValid) {
+                return invalidTypeResponse()
+            }
+        }
+
+        const transaction = await this.updateTransactionUseCase.execute(
+            httpRequest.params.transactionId,
+            params,
+        )
+
+        return ok(transaction)
     }
 }
