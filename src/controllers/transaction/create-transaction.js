@@ -1,15 +1,12 @@
+import { UserNotFoundError } from '../../errors/users.js'
+import { createTransactionSchema } from '../../schemas/transaction.js'
 import {
-    checkIfIdIsValid,
     created,
-    invalidIdResponse,
-    requiredFieldIsMissingResponse,
     serverError,
-    validateRequiredFields,
-    checkIfAmountIsValid,
-    checkIfTypeIsValid,
-    invalidTypeResponse,
-    invalidAmountResponse,
+    badRequest,
+    userNotFoundResponse,
 } from '../helpers/index.js'
+import { ZodError } from 'zod'
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -19,42 +16,22 @@ export class CreateTransactionController {
         try {
             const params = httpRequest.body
 
-            const requiredFields = ['user_id', 'name', 'date', 'amount', 'type']
+            await createTransactionSchema.parseAsync(params)
 
-            const { ok: RequiredFieldsWereProvided, missingField } =
-                validateRequiredFields(params, requiredFields)
-
-            if (!RequiredFieldsWereProvided) {
-                return requiredFieldIsMissingResponse(missingField)
-            }
-
-            const userIdisValid = checkIfIdIsValid(params.user_id)
-
-            if (!userIdisValid) {
-                return invalidIdResponse()
-            }
-
-            const amountIsValid = checkIfAmountIsValid(params.amount)
-
-            if (!amountIsValid) {
-                return invalidAmountResponse()
-            }
-
-            const type = params.type.trim().toUpperCase()
-
-            const typeIsValid = checkIfTypeIsValid(type)
-
-            if (!typeIsValid) {
-                return invalidTypeResponse()
-            }
-
-            const transaction = await this.createTransactionUseCase.execute({
-                ...params,
-                type,
-            })
+            const transaction =
+                await this.createTransactionUseCase.execute(params)
 
             return created(transaction)
         } catch (error) {
+            if (error instanceof ZodError) {
+                console.log(error)
+                return badRequest({
+                    message: error.issues[0].message,
+                })
+            }
+            if (error instanceof UserNotFoundError) {
+                return userNotFoundResponse()
+            }
             console.error(error)
             return serverError()
         }
