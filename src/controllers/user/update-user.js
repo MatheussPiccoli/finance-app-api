@@ -39,7 +39,6 @@ export class UpdateUserController {
             return ok(updatedUser)
         } catch (error) {
             if (error instanceof ZodError) {
-                console.log(error.issues)
                 return badRequest({
                     message: error.issues[0].message,
                 })

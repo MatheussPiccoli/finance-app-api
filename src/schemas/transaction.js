@@ -6,14 +6,14 @@ export { z } from 'zod'
 export const createTransactionSchema = z.object({
     user_id: z
         .string({
-            message: 'User ID is required.',
+            error: 'User ID is required.',
         })
         .uuid({
             message: 'User ID  must be a valid UUID',
         }),
     name: z
         .string({
-            message: 'Name is required.',
+            error: 'Name is required.',
         })
         .trim()
         .min(1, {
@@ -21,12 +21,12 @@ export const createTransactionSchema = z.object({
         }),
     date: z
         .string({
-            message: 'Date is required',
+            error: 'Date is required',
         })
         .datetime({
             message: 'Date must be a valid date.',
         }),
-    type: z.string('Type is required').pipe(
+    type: z.string({ error: 'Type is required' }).pipe(
         z.enum(['EXPENSE', 'EARNING', 'INVESTMENT'], {
             message: 'Type must be EXPENSE, EARNING or INVESTMENT',
         }),

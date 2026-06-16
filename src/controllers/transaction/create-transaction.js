@@ -24,7 +24,6 @@ export class CreateTransactionController {
             return created(transaction)
         } catch (error) {
             if (error instanceof ZodError) {
-                console.log(error)
                 return badRequest({
                     message: error.issues[0].message,
                 })
